@@ -33,7 +33,7 @@ if __name__ == '__main__':
 
     print("需求列表：")
     print(json.dumps(need_sku, indent=4, ensure_ascii=False))
-    print("\n")
+    print("=-" * 30)
 
     for product_name, sku_info in need_sku.items():
         for sku_name in sku_info.keys():
@@ -58,3 +58,5 @@ if __name__ == '__main__':
                     print(tabulate(df, headers='keys', tablefmt='psql', showindex=False))
                     print(
                         f"***【{product_name}】-【{sku_name}】 有存货！ =》 需求：{need_sku[product_name][sku_name]}个，存货{rs.rowcount}个\n")
+    else:
+        print("未查到任何数据")
