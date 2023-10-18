@@ -32,6 +32,7 @@ class Refund(Base):
     is_atom = Column(Integer)
     record_update_time = Column(DateTime, server_default=func.now(), onupdate=func.now())
     refund_result = Column(String)
+    recycle_status = Column(String)
 
     __KEY__ = {
         'order_id': "订单编号",
@@ -84,7 +85,7 @@ class Refund(Base):
         msg = ''
         for k, v in self.__KEY__.items():
             if self.__getattribute__(k) != keyword.get(v):
-                msg += f"{v}: {self.__getattribute__(k)} -> {keyword.get(v)};"
+                msg += f"{v}: {self.__getattribute__(k)} -> {keyword.get(v)}；"
                 self.__setattr__(k, keyword.get(v))
         return msg
 

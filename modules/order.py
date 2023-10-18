@@ -100,7 +100,7 @@ class Order(Base):
         msg = ''
         for k, v in self.__KEY__.items():
             if self.__getattribute__(k) != keyword.get(v):
-                msg += f"{v}: {self.__getattribute__(k)} -> {keyword.get(v)};"
+                msg += f"{v}: {self.__getattribute__(k)} -> {keyword.get(v)}；"
                 self.__setattr__(k, keyword.get(v))
         return msg
 
