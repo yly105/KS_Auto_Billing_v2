@@ -4,3 +4,5 @@ tabulate
 pymysql
 tqdm
 openpyxl
+requests
+selenium

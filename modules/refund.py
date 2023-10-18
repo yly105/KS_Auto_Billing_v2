@@ -33,6 +33,7 @@ class Refund(Base):
     record_update_time = Column(DateTime, server_default=func.now(), onupdate=func.now())
     refund_result = Column(String)
     recycle_status = Column(String)
+    recycle_time = Column(DateTime)
 
     __KEY__ = {
         'order_id': "订单编号",

@@ -1,4 +1,3 @@
-from modules import db_session
 from modules.order import Order
 from modules.refund import Refund
 
