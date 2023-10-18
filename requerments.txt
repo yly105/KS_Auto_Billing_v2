@@ -1,0 +1,6 @@
+pandas
+sqlalchemy
+tabulate
+pymysql
+tqdm
+openpyxl
