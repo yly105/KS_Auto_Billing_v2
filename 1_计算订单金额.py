@@ -55,8 +55,8 @@ def main(start_time, end_time):
 
 
 if __name__ == '__main__':
-    start_time = '2023-10-10 00:00:00'
-    end_time = '2023-10-18 23:59:59'
+    start_time = '2023-01-10 00:00:00'
+    end_time = '2023-10-17 23:59:59'
     print("\n")
     print(f"开始计算 {start_time} 至 {end_time} 订单金额信息...")
     print("-" * 80)

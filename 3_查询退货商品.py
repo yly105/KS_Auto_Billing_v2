@@ -6,7 +6,8 @@ import pandas as pd
 from sqlalchemy import text
 from tabulate import tabulate
 
-from modules import Engine
+from modules import Engine, db_session
+from modules.refund import Refund
 from services.woda_query import get_woda_order_list
 
 pd.set_option('display.width', 1000)
@@ -39,7 +40,7 @@ if __name__ == '__main__':
     print("=-" * 30)
 
     msg = ""
-    opt_refund_id = []
+    opt_refund_id_list = []
     for product_name, sku_info in need_sku.items():
         for sku_name in sku_info.keys():
             sql = f'''
@@ -56,27 +57,35 @@ if __name__ == '__main__':
                 WHERE
                     o.sku_name = '{sku_name}'
                     AND
-                    r.recycle_status = "可重发"
+                    (r.recycle_status = "可重发" or r.recycle_status = "重发中")
             '''
             with Engine.connect() as con:
                 rs = con.execute(text(sql))
                 if rs.rowcount:
                     df = pd.DataFrame(rs)
-                    for index, row in df.iterrows():
-                        opt_refund_id.append(row['refund_id'])
-                    msg += (
-                        f"\n\n***【{product_name}】-【{sku_name}】 有存货！ =》 需求：{need_sku[product_name][sku_name]}个，存货{rs.rowcount}个\n")
+                    q = min(need_sku[product_name][sku_name], rs.rowcount)
+                    msg += f"\n\n***【{product_name}】-【{sku_name}】 有存货！ =》 需求：{need_sku[product_name][sku_name]}个，存货{rs.rowcount}个，可重发 {q} 个\n"
                     msg += tabulate(df, headers='keys', tablefmt='psql', showindex=False)
+                    for index, row in df.iterrows():
+                        if index == q:
+                            break
+                        opt_refund_id_list.append(row['refund_id'])
 
     if msg:
         formatted_time = datetime.datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
         msg = (f"退货重发匹配记录时间：{formatted_time}"
                + msg
-               + f"\n{'=-' * 30}\n可重发商品退款单编号：{opt_refund_id}，共计 {len(opt_refund_id)} 个")
+               + f"\n{'=-' * 30}\n可重发商品退款单编号：{opt_refund_id_list}，共计 {len(opt_refund_id_list)} 个")
         print(msg)
         print('=-' * 30)
-        ctn = input("是否保存结果至文件，输入 y 保存：")
+        ctn = input("是否将回收状态改为'重发中'，输入 y 保存：")
         if ctn == "y" or ctn == "Y":
+            for rid in opt_refund_id_list:
+                rfd = db_session.query(Refund).filter(Refund.refund_id == rid).first()
+                rfd.recycle_status = "重发中"
+                rfd.recycle_time = datetime.datetime.now()
+                db_session.commit()
+            print('已完成数据修改～')
             file_path = os.path.dirname(os.path.abspath(__file__)) + f"/logs/重发-{formatted_time}.txt"
             with open(file_path, "w", encoding="utf8") as f:
                 f.write(msg)

@@ -80,6 +80,7 @@ if __name__ == '__main__':
             print('1：商品可重发')
             print('2：商品重新发出中')
             print('3：商品已重新发出')
+            print('4：未处理订单')
             rs = input("请输入要查询的状态(支持多个)：")
             if not rs:
                 continue
@@ -93,6 +94,8 @@ if __name__ == '__main__':
                     sub_sql += ["r.recycle_status = '重发中'"]
                 elif c == "3":
                     sub_sql += ["r.recycle_status = '已重发'"]
+                else:
+                    sub_sql += ["r.recycle_status is null and r.refund_logistics_id is not null"]
             sub_sql_str = " or ".join(sub_sql)
             sql = f"""
                 select
