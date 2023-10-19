@@ -72,8 +72,9 @@ if __name__ == '__main__':
         formatted_time = datetime.datetime.now().strftime('%Y-%m-%d_%H:%M:%S')
         msg = (f"退货重发匹配记录时间：{formatted_time}"
                + msg
-               + f"\n{'=-' * 10}\n可重发商品退款单编号：{opt_refund_id}，共计 {len(opt_refund_id)} 个")
+               + f"\n{'=-' * 30}\n可重发商品退款单编号：{opt_refund_id}，共计 {len(opt_refund_id)} 个")
         print(msg)
+        print('=-' * 30)
         ctn = input("是否保存结果至文件，输入 y 保存：")
         if ctn == "y" or ctn == "Y":
             file_path = os.path.dirname(os.path.abspath(__file__)) + f"/logs/重发-{formatted_time}.txt"
