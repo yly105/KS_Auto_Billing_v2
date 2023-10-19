@@ -8,6 +8,7 @@ from modules.refund import Refund
 pd.set_option('display.width', 1000)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
+pd.set_option('display.colheader_justify', 'center')
 pd.set_option('display.unicode.ambiguous_as_wide', True)
 pd.set_option('display.unicode.east_asian_width', True)
 
@@ -26,17 +27,18 @@ if __name__ == '__main__':
                 continue
             sql = f'''
                 select
-                    o.order_id ,
-                    o.delivery_time ,
-                    o.refund_status ,
-                    o.product_id ,
---                     SUBSTRING_INDEX(o.product_name , ' ', 1) as product_name ,
-                    o.sku_name ,
-                    r.refund_id ,
-                    r.refund_logistics_id ,
                     r.refund_status ,
                     r.recycle_status,
-                    r.recycle_time
+                    r.recycle_time ,
+--                     SUBSTRING_INDEX(o.product_name , ' ', 1) as product_name ,
+                    o.sku_name,
+                    r.refund_logistics_id ,
+                    o.order_id ,
+                    r.refund_id,
+                    r.refund_reason,
+                    r.refund_desc,                    o.delivery_time ,
+                    r.refund_create_time ,
+                    r.refund_end_time
                 from
                     refunds r
                 left join orders o on
@@ -51,19 +53,18 @@ if __name__ == '__main__':
                 continue
             sql = f"""
                 select
-                    o.order_id ,
-                    o.delivery_time ,
-                    o.order_status ,
-                    o.product_id ,
---                     SUBSTRING_INDEX(o.product_name , ' ', 1) as product_name ,
-                    o.sku_name,
-                    r.refund_id,
-                    r.refund_logistics_id ,
-                    r.refund_reason,
-                    r.refund_desc,
                     r.refund_status ,
                     r.recycle_status,
-                    r.recycle_time
+                    r.recycle_time ,
+--                     SUBSTRING_INDEX(o.product_name , ' ', 1) as product_name ,
+                    o.sku_name,
+                    r.refund_logistics_id ,
+                    o.order_id ,
+                    r.refund_id,
+                    r.refund_reason,
+                    r.refund_desc,                    o.delivery_time ,
+                    r.refund_create_time ,
+                    r.refund_end_time
                 from
                     refunds r
                 left join orders o on
@@ -95,19 +96,18 @@ if __name__ == '__main__':
             sub_sql_str = " or ".join(sub_sql)
             sql = f"""
                 select
-                        o.order_id ,
-                        o.delivery_time ,
-                        o.order_status ,
-                        o.product_id ,
-                        SUBSTRING_INDEX(o.product_name , ' ', 1) as product_name ,
-                        o.sku_name,
-                        r.refund_id,
-                        r.refund_logistics_id ,
-                        r.refund_reason,
-                        r.refund_desc,
-                        r.refund_status ,
-                        r.recycle_status,
-                        r.recycle_time
+                    r.refund_status ,
+                    r.recycle_status,
+                    r.recycle_time ,
+--                     SUBSTRING_INDEX(o.product_name , ' ', 1) as product_name ,
+                    o.sku_name,
+                    r.refund_logistics_id ,
+                    o.order_id ,
+                    r.refund_id,
+                    r.refund_reason,
+                    r.refund_desc,                    o.delivery_time ,
+                    r.refund_create_time ,
+                    r.refund_end_time
                     from
                         refunds r
                     left join orders o on
