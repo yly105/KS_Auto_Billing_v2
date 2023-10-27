@@ -35,8 +35,12 @@ if __name__ == '__main__':
                     need_sku[short_title] = {}
                     need_sku[short_title][short_sku_name] = 1
 
-    print("需求列表：")
-    print(json.dumps(need_sku, indent=4, ensure_ascii=False))
+    print("需求列表：\n")
+    print(f"当前时间:{datetime.datetime.now().strftime('%Y-%m-%d_%H:%M:%S')}")
+    for pn, ks in need_sku.items():
+        print(f"{pn}：共计 {sum(ks.values())} 个")
+        for sn, sq in ks.items():
+            print(f"\t{sn} ：{sq} 个")
     print("=-" * 30)
 
     msg = ""

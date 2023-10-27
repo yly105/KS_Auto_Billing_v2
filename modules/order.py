@@ -1,7 +1,8 @@
+import io
 import re
 
 from sqlalchemy import Column, Integer, String, DateTime, Float, func, and_
-
+import msoffcrypto
 from configs.fee_conf import *
 from modules import Base, db_session
 import pandas
@@ -159,8 +160,16 @@ class Order(Base):
             db_session.commit()
 
     @staticmethod
-    def insert_all_by_file(file_path):
-        df = pandas.read_excel(file_path)
+    def insert_all_by_file(file_path, passwd=None):
+        if passwd:
+            temp = io.BytesIO()
+            with open(file_path, 'rb') as f:
+                excel = msoffcrypto.OfficeFile(f)
+                excel.load_key(passwd)
+                excel.decrypt(temp)
+            df = pandas.read_excel(temp)
+        else:
+            df = pandas.read_excel(file_path)
         data = df.to_dict("records")
         print(f'{file_path}文件读取成功！共计{len(data)} 条数据...')
         for record in tqdm(data):
